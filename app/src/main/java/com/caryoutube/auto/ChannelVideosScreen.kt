@@ -3,6 +3,8 @@ package com.caryoutube.auto
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.model.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.caryoutube.CarYouTubeApp
 import com.caryoutube.YouTubeChannel
 import com.caryoutube.YouTubeVideo
@@ -24,6 +26,11 @@ class ChannelVideosScreen(
     private var error: String? = null
 
     init {
+        lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onDestroy(owner: LifecycleOwner) {
+                scope.cancel()
+            }
+        })
         loadVideos()
     }
 
@@ -97,8 +104,4 @@ class ChannelVideosScreen(
             .build()
     }
 
-    override fun onDestroy(owner: androidx.lifecycle.LifecycleOwner) {
-        super.onDestroy(owner)
-        scope.cancel()
-    }
 }
